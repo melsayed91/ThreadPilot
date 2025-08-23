@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vehicles.Application.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Application.Tests", "tests\Insurance.Application.Tests\Insurance.Application.Tests.csproj", "{3A6295AB-C994-448D-9F9D-F47A75C31702}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vehicles.Infrastructure.Tests", "tests\Vehicles.Infrastructure.Tests\Vehicles.Infrastructure.Tests.csproj", "{2BAB83A6-2656-4076-980A-27117A904622}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Infrastructure.Tests", "tests\Insurance.Infrastructure.Tests\Insurance.Infrastructure.Tests.csproj", "{35BBCFE3-2DF3-4044-9BF5-16ADCA36C58B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +92,14 @@ Global
 		{3A6295AB-C994-448D-9F9D-F47A75C31702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A6295AB-C994-448D-9F9D-F47A75C31702}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A6295AB-C994-448D-9F9D-F47A75C31702}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BAB83A6-2656-4076-980A-27117A904622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BAB83A6-2656-4076-980A-27117A904622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BAB83A6-2656-4076-980A-27117A904622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BAB83A6-2656-4076-980A-27117A904622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BBCFE3-2DF3-4044-9BF5-16ADCA36C58B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BBCFE3-2DF3-4044-9BF5-16ADCA36C58B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BBCFE3-2DF3-4044-9BF5-16ADCA36C58B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BBCFE3-2DF3-4044-9BF5-16ADCA36C58B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{45C7C205-1B09-4558-AE59-0B3AF7DCF450} = {C9DB8632-9B2F-4FD0-8D07-85EF5F8FBF3E}
@@ -102,5 +114,7 @@ Global
 		{FD451772-F87D-42AA-8A26-2FA17A19793D} = {A7898E92-9088-4604-A9F5-9375006B089F}
 		{2B828F5A-AC24-49B0-B29E-D78A68E8E56D} = {A7898E92-9088-4604-A9F5-9375006B089F}
 		{3A6295AB-C994-448D-9F9D-F47A75C31702} = {A7898E92-9088-4604-A9F5-9375006B089F}
+		{2BAB83A6-2656-4076-980A-27117A904622} = {A7898E92-9088-4604-A9F5-9375006B089F}
+		{35BBCFE3-2DF3-4044-9BF5-16ADCA36C58B} = {A7898E92-9088-4604-A9F5-9375006B089F}
 	EndGlobalSection
 EndGlobal
