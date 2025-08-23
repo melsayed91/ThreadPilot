@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vehicles.Application\Vehicles.Application.csproj" />
+    <ProjectReference Include="..\Vehicles.Infrastructure\Vehicles.Infrastructure.csproj" />
+    <ProjectReference Include="..\Vehicles.Domain\Vehicles.Domain.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
