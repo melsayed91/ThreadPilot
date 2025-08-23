@@ -1,0 +1,22 @@
+# dotnet
+bin/
+obj/
+out/
+TestResults/
+*.user
+*.suo
+*.nupkg
+
+# IDE/editor
+.vscode/
+*.code-workspace
+*.DS_Store
+*.idea
+
+# coverage & reports
+coverage*/
+*.lcov
+*.opencover.xml
+
+# misc
+*.swp
