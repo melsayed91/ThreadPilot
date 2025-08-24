@@ -26,9 +26,12 @@ public class VehicleLookupHttpAdapter : IVehicleLookupPort
         using var res = await _http.PostAsJsonAsync("/v1/vehicles/batch", payload, ct);
         res.EnsureSuccessStatusCode();
 
-        var body = await res.Content.ReadFromJsonAsync<VehicleInfoDto[]>(cancellationToken: ct)
-                   ?? [];
+        var wrapper = await res.Content.ReadFromJsonAsync<VehicleBatchWrapper>(cancellationToken: ct)
+                      ?? new VehicleBatchWrapper(Array.Empty<VehicleInfoDto>());
 
-        return body.ToDictionary(v => v.RegNumber, v => v, StringComparer.OrdinalIgnoreCase);
+        var dict = wrapper.Vehicles.ToDictionary(v => v.RegNumber, v => v, StringComparer.OrdinalIgnoreCase);
+        return dict;
     }
+
+    private sealed record VehicleBatchWrapper(IEnumerable<VehicleInfoDto> Vehicles);
 }

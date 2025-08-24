@@ -1,18 +1,30 @@
+using Microsoft.FeatureManagement;
+using Vehicles.Api.Extensions;
+using Vehicles.Application.UseCases.GetVehicleByReg;
+using Vehicles.Application.UseCases.GetVehiclesBatch;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddFeatureManagement();
+
+builder.Services.AddControllers();
+
+builder.Services
+    .AddApiSwagger()
+    .AddApiProblemDetails()
+    .AddMediator(
+        typeof(GetVehicleByRegQuery).Assembly,
+        typeof(GetVehiclesBatchQuery).Assembly)
+    .AddInfrastructure();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseApiSwagger(app.Environment);
+app.UseApiExceptionHandler();
 
+app.MapGet("/", () => Results.Ok("Vehicles API running"));
 app.MapGet("/health", () => Results.Ok("ok"));
 
-app.MapGet("/", () => Results.Ok("ThreadPilot Vehicles API is running"));
+app.MapControllers();
 
 app.Run();

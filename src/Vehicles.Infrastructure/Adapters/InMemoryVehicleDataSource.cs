@@ -12,14 +12,18 @@ public class InMemoryVehicleDataSource : IVehicleDataSource
     {
         _byReg = new Dictionary<string, Vehicle>(StringComparer.OrdinalIgnoreCase);
 
-        seed ??=
-        [
-            new Vehicle(RegistrationNumber.From("ABC123"), "Tesla", "Model 3", 2020, "VIN-A"),
-            new Vehicle(RegistrationNumber.From("XYZ999"), "Volvo", "XC90", 2019, "VIN-X"),
-            new Vehicle(RegistrationNumber.From("KLM456"), "Toyota", "Corolla", 2018, "VIN-K")
-        ];
+        var vehicles = seed?.ToList() ?? [];
 
-        foreach (var v in seed)
+        if (vehicles.Count == 0)
+        {
+            vehicles.AddRange([
+                new Vehicle(RegistrationNumber.From("ABC123"), "Tesla", "Model 3", 2020, "VIN-A"),
+                new Vehicle(RegistrationNumber.From("XYZ999"), "Volvo", "XC90", 2019, "VIN-X"),
+                new Vehicle(RegistrationNumber.From("KLM456"), "Toyota", "Corolla", 2018, "VIN-K")
+            ]);
+        }
+
+        foreach (var v in vehicles)
             _byReg[v.RegNumber.Value] = v;
     }
 
