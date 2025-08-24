@@ -1,5 +1,6 @@
 using Insurance.Application.Ports;
 using Insurance.Infrastructure.Adapters;
+using Insurance.Infrastructure.Decorators;
 
 namespace Insurance.Api.Extensions;
 
@@ -13,6 +14,8 @@ public static class InfrastructureExtensions
             var baseUrl = config["Vehicles:BaseUrl"] ?? "http://localhost:5011";
             client.BaseAddress = new Uri(baseUrl);
         });
+        services.Decorate<IVehicleLookupPort, FeatureGatedVehicleLookup>();
+
 
         return services;
     }

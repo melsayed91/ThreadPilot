@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement.Mvc;
 using Vehicles.Api.Contracts.Request;
 using Vehicles.Api.Contracts.Response;
 using Vehicles.Application.UseCases.GetVehicleByReg;
@@ -33,6 +34,7 @@ public class VehiclesController : ControllerBase
     }
 
     [HttpPost("batch")]
+    [FeatureGate("EnableVehiclesBatchEndpoint")]
     [ProducesResponseType(typeof(VehicleBatchResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Batch([FromBody] VehicleBatchRequest req, CancellationToken ct)
     {
