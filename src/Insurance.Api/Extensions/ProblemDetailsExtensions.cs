@@ -16,31 +16,40 @@ public static class ProblemDetailsExtensions
     {
         app.UseExceptionHandler(a => a.Run(async ctx =>
         {
-            var err = ctx.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
-            var problem = err switch
+            var ex = ctx.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+            var baseEx = ex?.GetBaseException();
+
+            var (status, title, detail) = baseEx switch
             {
-                ValidationException ve => new ProblemDetails
-                {
-                    Title = "Validation error",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = string.Join("; ", ve.Errors.Select(e => e.ErrorMessage))
-                },
-                DomainException de => new ProblemDetails
-                {
-                    Title = "Domain error",
-                    Status = StatusCodes.Status422UnprocessableEntity,
-                    Detail = de.Message
-                },
-                _ => new ProblemDetails
-                {
-                    Title = "Server error",
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = err?.Message
-                }
+                ValidationException ve => (
+                    StatusCodes.Status400BadRequest,
+                    "Validation error",
+                    string.Join("; ", ve.Errors.Select(e => e.ErrorMessage))
+                ),
+                DomainException de => (
+                    StatusCodes.Status422UnprocessableEntity,
+                    "Domain error",
+                    de.Message
+                ),
+                HttpRequestException hre => (
+                    StatusCodes.Status502BadGateway,
+                    "Upstream error",
+                    hre.Message
+                ),
+                _ => (
+                    StatusCodes.Status500InternalServerError,
+                    "Server error",
+                    baseEx?.Message ?? "Unexpected error"
+                )
             };
 
-            ctx.Response.StatusCode = problem.Status ?? 500;
-            await ctx.Response.WriteAsJsonAsync(problem);
+            ctx.Response.StatusCode = status;
+            await ctx.Response.WriteAsJsonAsync(new ProblemDetails
+            {
+                Title = title,
+                Status = status,
+                Detail = detail
+            });
         }));
 
         return app;

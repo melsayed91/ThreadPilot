@@ -23,9 +23,11 @@ public class VehicleLookupHttpAdapterTests
                     new VehicleInfoDto(r.ToUpperInvariant(), "Make", "Model", 2020, $"VIN-{r.ToUpperInvariant()}"))
                 .ToArray();
 
-            var json = JsonSerializer.Serialize(vehicles);
+            var json = JsonSerializer.Serialize(new { vehicles });
             return new HttpResponseMessage(HttpStatusCode.OK)
-                { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
         });
 
         var http = new HttpClient(handler) { BaseAddress = new Uri("http://localhost") };
