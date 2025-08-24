@@ -1,4 +1,5 @@
 # ThreadPilot
+![Build](https://github.com/melsayed91/ThreadPilot/actions/workflows/build-and-test.yml/badge.svg)
 
 A demo solution in **.NET 8** implementing **Clean Architecture**, **CQRS with MediatR**, and **modern engineering practices**.
 
