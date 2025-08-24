@@ -1,7 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using MediatR;
-using Vehicles.Application.Behaviors;
+using Shared.Behaviors;
 
 namespace Vehicles.Api.Extensions;
 
@@ -13,6 +13,8 @@ public static class MediatorExtensions
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
         services.AddValidatorsFromAssemblies(assemblies);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
         return services;
     }
 }

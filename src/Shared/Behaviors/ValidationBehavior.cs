@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Vehicles.Application.Behaviors;
+namespace Shared.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
@@ -10,10 +10,10 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 
     public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(next);
+
         if (_validators.Any())
         {
             var context = new ValidationContext<TRequest>(request);
