@@ -12,7 +12,7 @@ public class VehicleLookupHttpAdapterTests
     [Fact]
     public async Task Batch_returns_dictionary_by_reg()
     {
-        var handler = new FakeHandler(async (request, ct) =>
+        using var handler = new FakeHandler(async (request, ct) =>
         {
             if (request.Method != HttpMethod.Post || request.RequestUri!.AbsolutePath != "/v1/vehicles/batch")
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -30,7 +30,8 @@ public class VehicleLookupHttpAdapterTests
             };
         });
 
-        var http = new HttpClient(handler) { BaseAddress = new Uri("http://localhost") };
+        using var http = new HttpClient(handler);
+        http.BaseAddress = new Uri("http://localhost");
         var adapter = new VehicleLookupHttpAdapter(http);
 
         // Act

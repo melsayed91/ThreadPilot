@@ -36,6 +36,7 @@ public class VehiclesController : ControllerBase
     [ProducesResponseType(typeof(VehicleBatchResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> Batch([FromBody] VehicleBatchRequest req, CancellationToken ct)
     {
+        ArgumentNullException.ThrowIfNull(req);
         var dtos = await _sender.Send(new GetVehiclesBatchQuery(req.RegNumbers), ct);
         var list = dtos.Select(d => new VehicleResponse(d.RegNumber, d.Make, d.Model, d.Year, d.Vin));
         return Ok(new VehicleBatchResponse(list));

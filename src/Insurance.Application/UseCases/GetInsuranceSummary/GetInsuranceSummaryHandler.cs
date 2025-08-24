@@ -16,9 +16,10 @@ public class GetInsuranceSummaryHandler : IRequestHandler<GetInsuranceSummaryQue
         _vehicles = vehicles;
     }
 
-    public async Task<InsuranceSummaryDto> Handle(GetInsuranceSummaryQuery request, CancellationToken ct)
+    public async Task<InsuranceSummaryDto> Handle(GetInsuranceSummaryQuery request, CancellationToken cancellationToken)
     {
-        var policies = await _insurance.GetPoliciesAsync(request.PersonalNumber, ct);
+        ArgumentNullException.ThrowIfNull(request);
+        var policies = await _insurance.GetPoliciesAsync(request.PersonalNumber, cancellationToken);
 
         var carRegs = policies
             .Where(p => p.Type == PolicyType.Car && !string.IsNullOrWhiteSpace(p.VehicleRegNumber))
@@ -28,7 +29,7 @@ public class GetInsuranceSummaryHandler : IRequestHandler<GetInsuranceSummaryQue
 
         var vehiclesByReg = carRegs.Length == 0
             ? new Dictionary<string, VehicleInfoDto>(StringComparer.OrdinalIgnoreCase)
-            : (Dictionary<string, VehicleInfoDto>)await _vehicles.GetByRegsAsync(carRegs, ct);
+            : (Dictionary<string, VehicleInfoDto>)await _vehicles.GetByRegsAsync(carRegs, cancellationToken);
 
         var summaries = new List<PolicySummaryDto>(policies.Count);
         foreach (var p in policies)
@@ -45,7 +46,7 @@ public class GetInsuranceSummaryHandler : IRequestHandler<GetInsuranceSummaryQue
                 Vehicle: vehicleDto));
         }
 
-        var currency = policies.FirstOrDefault()?.MonthlyCost.Currency ?? "USD";
+        var currency = policies.Count > 0 ? policies[0].MonthlyCost.Currency : "USD";
         var total = policies.Select(p => p.MonthlyCost)
             .Aggregate(Money.Zero(currency), (acc, next) => acc + next);
 

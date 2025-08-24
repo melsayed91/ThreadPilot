@@ -25,7 +25,7 @@ public class PostVehiclesBatchTests : IClassFixture<WebApplicationFactory<Progra
         res.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await res.Content.ReadFromJsonAsync<VehicleBatchResponse>();
         body!.Vehicles.Should().HaveCount(2);
-        body.Vehicles.Select(v => v.RegNumber).Should().BeEquivalentTo(new[] { "ABC123", "XYZ999" });
+        body.Vehicles.Select(v => v.RegNumber).Should().BeEquivalentTo("ABC123", "XYZ999");
     }
 
     [Fact]

@@ -11,14 +11,15 @@ public class GetVehiclesBatchHandler : IRequestHandler<GetVehiclesBatchQuery, IR
 
     public GetVehiclesBatchHandler(IVehicleDataSource source) => _source = source;
 
-    public async Task<IReadOnlyList<VehicleDto>> Handle(GetVehiclesBatchQuery request, CancellationToken ct)
+    public async Task<IReadOnlyList<VehicleDto>> Handle(GetVehiclesBatchQuery request, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
         var regs = request.RegNumbers
             .Select(RegistrationNumber.From)
             .DistinctBy(r => r.Value)
             .ToArray();
 
-        var map = await _source.GetByRegsAsync(regs, ct);
+        var map = await _source.GetByRegsAsync(regs, cancellationToken);
 
         return map.Values
             .Select(v => new VehicleDto(v.RegNumber.Value, v.Make, v.Model, v.Year, v.Vin))

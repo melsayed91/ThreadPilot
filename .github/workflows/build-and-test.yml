@@ -1,0 +1,58 @@
+name: build-and-test
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build (Release, warnings as errors)
+        run: dotnet build --configuration Release --no-restore /warnaserror
+
+      - name: Test (with coverage)
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+      - name: Publish coverage summary
+        if: always()
+        run: |
+          echo "## Test Run Summary" >> $GITHUB_STEP_SUMMARY
+          find TestResults -name "coverage.cobertura.xml" -print
+          total=$(dotnet tool run reportgenerator -reports:TestResults/**/coverage.cobertura.xml -targetdir:coveragereport -reporttypes:TextSummary || true)
+          if [ -f coveragereport/Summary.txt ]; then
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat coveragereport/Summary.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+        shell: bash
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-cobertura
+          path: |
+            TestResults/**/coverage.cobertura.xml
+            coveragereport/**

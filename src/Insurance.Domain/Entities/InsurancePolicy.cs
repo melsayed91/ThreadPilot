@@ -2,13 +2,13 @@ using Insurance.Domain.ValueObjects;
 
 namespace Insurance.Domain.Entities;
 
-public sealed class Policy
+public sealed class InsurancePolicy
 {
     public PolicyType Type { get; }
     public Money MonthlyCost { get; }
     public string? VehicleRegNumber { get; }
 
-    public Policy(PolicyType type, Money monthlyCost, string? vehicleRegNumber = null)
+    public InsurancePolicy(PolicyType type, Money monthlyCost, string? vehicleRegNumber = null)
     {
         if (!Enum.IsDefined(typeof(PolicyType), type) || type == PolicyType.Unknown)
             throw new DomainException("Invalid policy type.");

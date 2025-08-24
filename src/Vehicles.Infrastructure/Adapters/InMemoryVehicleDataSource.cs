@@ -28,10 +28,15 @@ public class InMemoryVehicleDataSource : IVehicleDataSource
     }
 
     public Task<Vehicle?> GetByRegAsync(RegistrationNumber reg, CancellationToken ct)
-        => Task.FromResult(_byReg.GetValueOrDefault(reg.Value));
+    {
+        ArgumentNullException.ThrowIfNull(reg);
+        return Task.FromResult(_byReg.GetValueOrDefault(reg.Value));
+    }
 
     public Task<IDictionary<string, Vehicle>> GetByRegsAsync(IEnumerable<RegistrationNumber> regs, CancellationToken ct)
     {
+        ArgumentNullException.ThrowIfNull(regs);
+
         var map = new Dictionary<string, Vehicle>(StringComparer.OrdinalIgnoreCase);
         foreach (var r in regs)
         {

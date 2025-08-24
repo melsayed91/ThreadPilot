@@ -1,0 +1,10 @@
+<Project>
+    <PropertyGroup>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <LangVersion>latestmajor</LangVersion>
+        <NoWarn>$(NoWarn);CA2007</NoWarn>
+        <NoWarn>$(NoWarn);CA2016</NoWarn>
+        <NoWarn>$(NoWarn);CA1707</NoWarn>
+    </PropertyGroup>
+</Project>

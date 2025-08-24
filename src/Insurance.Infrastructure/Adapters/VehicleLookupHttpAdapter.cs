@@ -12,7 +12,8 @@ public class VehicleLookupHttpAdapter : IVehicleLookupPort
 
     public async Task<VehicleInfoDto?> GetByRegAsync(string reg, CancellationToken ct)
     {
-        using var res = await _http.GetAsync($"/v1/vehicles/{Uri.EscapeDataString(reg)}", ct);
+        var uri = new Uri($"/v1/vehicles/{Uri.EscapeDataString(reg)}", UriKind.Relative);
+        using var res = await _http.GetAsync(uri, ct);
         if (res.StatusCode == HttpStatusCode.NotFound) return null;
         res.EnsureSuccessStatusCode();
         return await res.Content.ReadFromJsonAsync<VehicleInfoDto>(cancellationToken: ct);

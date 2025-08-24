@@ -45,7 +45,7 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
         var (factory, fake) = WithVehiclesStub();
         var client = factory.CreateClient();
 
-        var res = await client.GetAsync("/v1/insurances/19650101-1234");
+        var res = await client.GetAsync(new Uri("/v1/insurances/19650101-1234", UriKind.Relative));
 
         res.StatusCode.Should().Be(HttpStatusCode.OK);
         var dto = await res.Content.ReadFromJsonAsync<InsuranceSummaryDto>();
@@ -56,7 +56,7 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
         cars.Should().HaveCount(3);
         cars.Should().OnlyContain(p => p.Vehicle != null);
         cars.Select(p => p.VehicleRegNumber).Distinct(StringComparer.OrdinalIgnoreCase)
-            .Should().BeEquivalentTo(new[] { "ABC123", "XYZ999" });
+            .Should().BeEquivalentTo("ABC123", "XYZ999");
 
         fake.BatchCalls.Should().Be(1);
     }
@@ -66,8 +66,7 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
     {
         var (factory, _) = WithVehiclesStub();
         var client = factory.CreateClient();
-
-        var res = await client.GetAsync("/v1/insurances/19650101"); // bad format
+        var res = await client.GetAsync(new Uri("/v1/insurances/19650101", UriKind.Relative));
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var problem = await res.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -89,7 +88,7 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
         });
 
         var client = factory.CreateClient();
-        var res = await client.GetAsync("/v1/insurances/19650101-1234");
+        var res = await client.GetAsync(new Uri("/v1/insurances/19650101-1234", UriKind.Relative));
 
         res.StatusCode.Should().Be(HttpStatusCode.BadGateway);
         var problem = await res.Content.ReadFromJsonAsync<ProblemDetails>();

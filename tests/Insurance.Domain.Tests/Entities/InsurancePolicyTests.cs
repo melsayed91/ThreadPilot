@@ -4,12 +4,12 @@ using Insurance.Domain.ValueObjects;
 
 namespace Insurance.Domain.Tests.Entities;
 
-public class PolicyTests
+public class InsurancePolicyTests
 {
     [Fact]
     public void CarPolicy_WithoutReg_Throws()
     {
-        var act = () => new Policy(PolicyType.Car, Money.Usd(30));
+        var act = () => new InsurancePolicy(PolicyType.Car, Money.Usd(30));
         act.Should().Throw<DomainException>()
             .WithMessage("*requires a vehicle registration number*");
     }
@@ -17,7 +17,7 @@ public class PolicyTests
     [Fact]
     public void PetPolicy_NoReg_Allowed()
     {
-        var p = new Policy(PolicyType.Pet, Money.Usd(10));
+        var p = new InsurancePolicy(PolicyType.Pet, Money.Usd(10));
         p.VehicleRegNumber.Should().BeNull();
         p.MonthlyCost.Amount.Should().Be(10);
     }
@@ -25,7 +25,7 @@ public class PolicyTests
     [Fact]
     public void UnknownPolicyType_IsRejected()
     {
-        var act = () => new Policy(PolicyType.Unknown, Money.Usd(10));
+        var act = () => new InsurancePolicy(PolicyType.Unknown, Money.Usd(10));
         act.Should().Throw<DomainException>()
             .WithMessage("*Invalid policy type*");
     }

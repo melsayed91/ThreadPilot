@@ -13,7 +13,7 @@ public class GetInsuranceSummaryHandlerTests
     [Fact]
     public async Task Enriches_car_policies_batches_once_and_sums_totals()
     {
-        var policies = new List<Policy>
+        var policies = new List<InsurancePolicy>
         {
             new(PolicyType.Pet, Money.Usd(10)),
             new(PolicyType.PersonalHealth, Money.Usd(20)),
@@ -57,7 +57,7 @@ public class GetInsuranceSummaryHandlerTests
     [Fact]
     public async Task Returns_policies_without_vehicle_enrichment_when_no_car_policies()
     {
-        var policies = new List<Policy>
+        var policies = new List<InsurancePolicy>
         {
             new(PolicyType.Pet, Money.Usd(10)),
             new(PolicyType.PersonalHealth, Money.Usd(20))
@@ -69,7 +69,7 @@ public class GetInsuranceSummaryHandlerTests
 
         var vehiclesPort = new Mock<IVehicleLookupPort>();
         vehiclesPort.Setup(v => v.GetByRegsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>()))
-            .Throws(new Exception("Should not be called"));
+            .Throws(new InvalidOperationException("Should not be called"));
 
         var handler = new GetInsuranceSummaryHandler(insurancePort.Object, vehiclesPort.Object);
 

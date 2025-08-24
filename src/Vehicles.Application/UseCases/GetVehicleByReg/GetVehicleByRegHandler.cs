@@ -14,6 +14,7 @@ public class GetVehicleByRegHandler : IRequestHandler<GetVehicleByRegQuery, Vehi
 
     public async Task<VehicleDto> Handle(GetVehicleByRegQuery request, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
         var reg = RegistrationNumber.From(request.RegNumber);
         var vehicle = await _source.GetByRegAsync(reg, cancellationToken);
         if (vehicle is null) throw new DomainException($"Vehicle {reg} not found");

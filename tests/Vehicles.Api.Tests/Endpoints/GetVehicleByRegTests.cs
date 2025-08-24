@@ -16,7 +16,7 @@ public class GetVehicleByRegTests : IClassFixture<WebApplicationFactory<Program>
     public async Task Returns_200_with_vehicle_when_found()
     {
         var client = _factory.CreateClient();
-        var res = await client.GetAsync("/v1/vehicles/ABC123");
+        var res = await client.GetAsync(new Uri("/v1/vehicles/ABC123", UriKind.Relative));
 
         res.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await res.Content.ReadFromJsonAsync<VehicleResponse>();
@@ -27,7 +27,7 @@ public class GetVehicleByRegTests : IClassFixture<WebApplicationFactory<Program>
     public async Task Returns_404_when_not_found()
     {
         var client = _factory.CreateClient();
-        var res = await client.GetAsync("/v1/vehicles/NOPE999");
+        var res = await client.GetAsync(new Uri("/v1/vehicles/NOPE999", UriKind.Relative));
 
         res.StatusCode.Should().Be(HttpStatusCode.NotFound);
         var problem = await res.Content.ReadFromJsonAsync<ProblemDetails>();
