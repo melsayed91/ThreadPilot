@@ -17,9 +17,9 @@ public class InMemoryVehicleDataSource : IVehicleDataSource
         if (vehicles.Count == 0)
         {
             vehicles.AddRange([
-                new Vehicle(RegistrationNumber.From("ABC123"), "Tesla", "Model 3", 2020, "VIN-A"),
-                new Vehicle(RegistrationNumber.From("XYZ999"), "Volvo", "XC90", 2019, "VIN-X"),
-                new Vehicle(RegistrationNumber.From("KLM456"), "Toyota", "Corolla", 2018, "VIN-K")
+                new Vehicle(Guid.NewGuid(), RegistrationNumber.From("ABC123"), "Tesla", "Model 3", 2020, "VIN-A"),
+                new Vehicle(Guid.NewGuid(), RegistrationNumber.From("XYZ999"), "Volvo", "XC90", 2019, "VIN-X"),
+                new Vehicle(Guid.NewGuid(), RegistrationNumber.From("KLM456"), "Toyota", "Corolla", 2018, "VIN-K")
             ]);
         }
 

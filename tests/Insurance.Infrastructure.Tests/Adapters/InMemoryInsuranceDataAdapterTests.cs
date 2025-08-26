@@ -11,7 +11,7 @@ public class InMemoryInsuranceDataAdapterTests
         var adapter = new InMemoryInsuranceDataAdapter();
 
         var a = await adapter.GetPoliciesAsync("19650101-1234", CancellationToken.None);
-        var b = await adapter.GetPoliciesAsync("unknown", CancellationToken.None);
+        var b = await adapter.GetPoliciesAsync("19650101-1111", CancellationToken.None);
 
         a.Should().HaveCountGreaterThan(0);
         b.Should().BeEmpty();

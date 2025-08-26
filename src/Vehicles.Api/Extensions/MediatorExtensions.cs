@@ -5,7 +5,7 @@ using Shared.Behaviors;
 
 namespace Vehicles.Api.Extensions;
 
-public static class MediatorExtensions
+internal static class MediatorExtensions
 {
     public static IServiceCollection AddMediator(
         this IServiceCollection services, params Assembly[] assemblies)

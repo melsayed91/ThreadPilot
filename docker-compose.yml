@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: tp-postgres
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: appsecret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  vehicles.api:
+    build:
+      context: .
+      dockerfile: src/Vehicles.Api/Dockerfile
+    container_name: vehicles-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=vehicles_db;Username=appuser;Password=appsecret
+      MIGRATE_ON_STARTUP: "true"
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
+  insurance.api:
+    build:
+      context: .
+      dockerfile: src/Insurance.Api/Dockerfile
+    container_name: insurance-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      Vehicles__BaseUrl: http://vehicles-api:8080
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=insurance_db;Username=appuser;Password=appsecret
+      MIGRATE_ON_STARTUP: "true"
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

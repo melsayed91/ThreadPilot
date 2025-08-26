@@ -3,11 +3,11 @@ using Vehicles.Infrastructure.Adapters;
 
 namespace Vehicles.Api.Extensions;
 
-public static class InfrastructureExtensions
+internal static class InfrastructureExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddSingleton<IVehicleDataSource, InMemoryVehicleDataSource>();
+        services.AddScoped<IVehicleDataSource, VehicleDataSource>();
         return services;
     }
 }

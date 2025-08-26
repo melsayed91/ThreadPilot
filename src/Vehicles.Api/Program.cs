@@ -15,7 +15,8 @@ builder.Services
     .AddMediator(
         typeof(GetVehicleByRegQuery).Assembly,
         typeof(GetVehiclesBatchQuery).Assembly)
-    .AddInfrastructure();
+    .AddInfrastructure()
+    .AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 
@@ -23,10 +24,13 @@ app.UseApiSwagger(app.Environment);
 app.UseApiExceptionHandler();
 
 app.MapGet("/", () => Results.Ok("Vehicles API running"));
-app.MapGet("/health", () => Results.Ok("ok"));
+app.MapHealthChecks("/health");
 
 app.MapControllers();
 
+app.MigrateDatabaseOnStartup();
 app.Run();
 
+#pragma warning disable CA1515
 public partial class Program;
+#pragma warning restore CA1515

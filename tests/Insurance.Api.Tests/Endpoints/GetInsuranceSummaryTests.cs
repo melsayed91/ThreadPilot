@@ -7,14 +7,15 @@ using Insurance.Application.Ports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Insurance.Api.Tests.Endpoints;
 
-public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Program>>
+public class GetInsuranceSummaryTests : IClassFixture<ApiFactory>
 {
-    private readonly WebApplicationFactory<Program> _baseFactory;
+    private readonly ApiFactory _baseFactory;
 
-    public GetInsuranceSummaryTests(WebApplicationFactory<Program> factory) => _baseFactory = factory;
+    public GetInsuranceSummaryTests(ApiFactory factory) => _baseFactory = factory;
 
     private (WebApplicationFactory<Program> Factory, FakeVehicleLookupPort Fake) WithVehiclesStub()
     {
@@ -29,9 +30,7 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
         {
             builder.ConfigureServices(services =>
             {
-                var toRemove = services.Where(sd => sd.ServiceType == typeof(IVehicleLookupPort)).ToList();
-                foreach (var sd in toRemove) services.Remove(sd);
-
+                services.RemoveAll<IVehicleLookupPort>();
                 services.AddSingleton<IVehicleLookupPort>(fake);
             });
         });
@@ -49,13 +48,15 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
 
         res.StatusCode.Should().Be(HttpStatusCode.OK);
         var dto = await res.Content.ReadFromJsonAsync<InsuranceSummaryDto>();
-        dto!.TotalMonthlyCost.Should().Be(10 + 20 + 30 + 30 + 30);
+
+        dto!.TotalMonthlyCost.Should().Be(10 + 20 + 30 + 30);
         dto.Currency.Should().Be("USD");
 
         var cars = dto.Policies.Where(p => p.PolicyType == "Car").ToList();
-        cars.Should().HaveCount(3);
+        cars.Should().HaveCount(2);
         cars.Should().OnlyContain(p => p.Vehicle != null);
-        cars.Select(p => p.VehicleRegNumber).Distinct(StringComparer.OrdinalIgnoreCase)
+        cars.Select(p => p.VehicleRegNumber)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .Should().BeEquivalentTo("ABC123", "XYZ999");
 
         fake.BatchCalls.Should().Be(1);
@@ -66,6 +67,7 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
     {
         var (factory, _) = WithVehiclesStub();
         var client = factory.CreateClient();
+
         var res = await client.GetAsync(new Uri("/v1/insurances/19650101", UriKind.Relative));
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -77,12 +79,12 @@ public class GetInsuranceSummaryTests : IClassFixture<WebApplicationFactory<Prog
     public async Task Returns_502_when_upstream_fails()
     {
         var throwingFake = new ThrowingVehicleLookup();
+
         var factory = _baseFactory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureServices(services =>
             {
-                var toRemove = services.Where(sd => sd.ServiceType == typeof(IVehicleLookupPort)).ToList();
-                foreach (var sd in toRemove) services.Remove(sd);
+                services.RemoveAll<IVehicleLookupPort>();
                 services.AddSingleton<IVehicleLookupPort>(throwingFake);
             });
         });

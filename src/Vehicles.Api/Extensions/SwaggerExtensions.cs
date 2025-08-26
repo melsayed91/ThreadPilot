@@ -1,6 +1,6 @@
 namespace Vehicles.Api.Extensions;
 
-public static class SwaggerExtensions
+internal static class SwaggerExtensions
 {
     public static IServiceCollection AddApiSwagger(this IServiceCollection services)
     {

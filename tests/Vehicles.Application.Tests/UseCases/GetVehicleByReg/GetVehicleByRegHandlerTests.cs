@@ -16,7 +16,8 @@ public class GetVehicleByRegHandlerTests
     {
         var src = new Mock<IVehicleDataSource>();
         src.Setup(s => s.GetByRegAsync(It.IsAny<RegistrationNumber>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Vehicle(RegistrationNumber.From("ABC123"), "Tesla", "Model 3", 2022, "VIN1"));
+            .ReturnsAsync(new Vehicle(Guid.NewGuid(), RegistrationNumber.From("ABC123"), "Tesla", "Model 3", 2022,
+                "VIN1"));
 
         var handler = new GetVehicleByRegHandler(src.Object);
 

@@ -5,12 +5,12 @@ using Insurance.Infrastructure.Decorators;
 
 namespace Insurance.Api.Extensions;
 
-public static class InfrastructureExtensions
+internal static class InfrastructureExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         services.AddSingleton<SingleFlightCoordinator>();
-        services.AddSingleton<IInsuranceDataPort, InMemoryInsuranceDataAdapter>();
+        services.AddScoped<IInsuranceDataPort, InsuranceDataAdapter>();
 
         services.AddHttpClient<IVehicleLookupPort, VehicleLookupHttpAdapter>(client =>
         {

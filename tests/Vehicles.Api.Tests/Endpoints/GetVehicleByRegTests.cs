@@ -2,15 +2,14 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Vehicles.Api.Contracts.Response;
 
 namespace Vehicles.Api.Tests.Endpoints;
 
-public class GetVehicleByRegTests : IClassFixture<WebApplicationFactory<Program>>
+public class GetVehicleByRegTests : IClassFixture<ApiFactory>
 {
-    private readonly WebApplicationFactory<Program> _factory;
-    public GetVehicleByRegTests(WebApplicationFactory<Program> factory) => _factory = factory;
+    private readonly ApiFactory _factory;
+    public GetVehicleByRegTests(ApiFactory factory) => _factory = factory;
 
     [Fact]
     public async Task Returns_200_with_vehicle_when_found()

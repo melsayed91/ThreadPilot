@@ -7,5 +7,16 @@
         <NoWarn>$(NoWarn);CA2016</NoWarn>
         <NoWarn>$(NoWarn);CA1707</NoWarn>
         <NoWarn>$(NoWarn);CA1716</NoWarn>
+        <NoWarn>$(NoWarn);CA1812</NoWarn>
+        <NoWarn>$(NoWarn);CS0122</NoWarn>
+        <NoWarn>$(NoWarn);CA1515</NoWarn>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(IsTestProject)'=='true' 
+                         Or $(MSBuildProjectName.EndsWith('.Tests')) 
+                         Or $(AssemblyName.EndsWith('.Tests'))">
+        <EnableNETAnalyzers>false</EnableNETAnalyzers>
+        <AnalysisLevel>none</AnalysisLevel>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningsAsErrors>false</WarningsAsErrors>
     </PropertyGroup>
 </Project>

@@ -2,17 +2,16 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Vehicles.Api.Contracts.Request;
 using Vehicles.Api.Contracts.Response;
 
 
 namespace Vehicles.Api.Tests.Endpoints;
 
-public class PostVehiclesBatchTests : IClassFixture<WebApplicationFactory<Program>>
+public class PostVehiclesBatchTests : IClassFixture<ApiFactory>
 {
-    private readonly WebApplicationFactory<Program> _factory;
-    public PostVehiclesBatchTests(WebApplicationFactory<Program> factory) => _factory = factory;
+    private readonly ApiFactory _factory;
+    public PostVehiclesBatchTests(ApiFactory factory) => _factory = factory;
 
     [Fact]
     public async Task Returns_200_and_deduplicates_results()
@@ -33,7 +32,8 @@ public class PostVehiclesBatchTests : IClassFixture<WebApplicationFactory<Progra
     {
         var client = _factory.CreateClient();
 
-        var res = await client.PostAsJsonAsync("/v1/vehicles/batch", new VehicleBatchRequest(Array.Empty<string>()));
+        var res = await client.PostAsJsonAsync("/v1/vehicles/batch",
+            new VehicleBatchRequest(Array.Empty<string>()));
 
         res.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var problem = await res.Content.ReadFromJsonAsync<ProblemDetails>();

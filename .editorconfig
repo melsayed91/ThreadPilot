@@ -5,3 +5,9 @@ indent_size = 4
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
+
+[**/Persistence/Migrations/*.cs]
+dotnet_analyzer_diagnostic.severity = none
+generated_code = true
+
+

@@ -12,8 +12,8 @@ public class InMemoryVehicleDataSourceTests
     {
         var seed = new[]
         {
-            new Vehicle(RegistrationNumber.From("ABC123"), "Tesla", "3", 2020, "VIN-A"),
-            new Vehicle(RegistrationNumber.From("XYZ999"), "Volvo", "XC90", 2019, "VIN-X")
+            new Vehicle(Guid.NewGuid(), RegistrationNumber.From("ABC123"), "Tesla", "3", 2020, "VIN-A"),
+            new Vehicle(Guid.NewGuid(), RegistrationNumber.From("XYZ999"), "Volvo", "XC90", 2019, "VIN-X")
         };
 
         var src = new InMemoryVehicleDataSource(seed);

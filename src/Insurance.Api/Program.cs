@@ -12,7 +12,8 @@ builder.Services
     .AddApiSwagger()
     .AddApiProblemDetails()
     .AddMediator(typeof(GetInsuranceSummaryQuery).Assembly)
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 
@@ -20,10 +21,13 @@ app.UseApiSwagger(app.Environment);
 app.UseApiExceptionHandler();
 
 app.MapGet("/", () => Results.Ok("Insurance API running"));
-app.MapGet("/health", () => Results.Ok("ok"));
+app.MapHealthChecks("/health");
 
 app.MapControllers();
 
+app.MigrateDatabaseOnStartup();
 app.Run();
 
+#pragma warning disable CA1515
 public partial class Program;
+#pragma warning restore CA1515

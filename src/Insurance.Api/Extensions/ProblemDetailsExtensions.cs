@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Extensions;
 
-public static class ProblemDetailsExtensions
+internal static class ProblemDetailsExtensions
 {
     public static IServiceCollection AddApiProblemDetails(this IServiceCollection services)
     {
