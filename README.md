@@ -33,34 +33,123 @@ The project demonstrates **testability, separation of concerns, feature toggling
 We follow **Clean Architecture** with four layers:
 
 ```mermaid
-flowchart TD
-    A[API Layer] --> B[Application Layer]
-    B --> C[Domain Layer]
-    B --> D[Infrastructure Layer]
-
-    subgraph API[Presentation / API]
-      A1[Controllers / Endpoints]
-      A2[Swagger + Health Checks]
+graph LR
+    subgraph "Clients"
+        CLI[HTTP Clients]
+        CURL[cURL/Postman]
+        WEB[Web Apps]
     end
 
-    subgraph Application[Application]
-      B1[Use Cases - MediatR Commands/Queries]
-      B2[Ports - Interfaces]
-      B3[Pipeline Behaviors - Validation, Logging]
+    subgraph VEHICLE_SERVICE["🚗 Vehicle Service"]
+        direction TB
+        subgraph V_API["API Layer"]
+            VAPI[Controllers]
+            VSWAG[Swagger/Health]
+            VMID[Middleware]
+        end
+        
+        subgraph V_APP["Application Layer"]
+            VMED[MediatR Handlers]
+            VPORTS[Ports/Interfaces]
+            VPIPE[Pipeline Behaviors]
+        end
+        
+        subgraph V_DOMAIN["Domain Layer"]
+            VENT[Vehicle Entity]
+            VREG[RegistrationNumber VO]
+            VDOM[Domain Rules]
+        end
+        
+        subgraph V_INFRA["Infrastructure Layer"]
+            VEF[EF Core]
+            VMEM[In-Memory Store]
+        end
     end
 
-    subgraph Domain[Domain]
-      C1[Entities]
-      C2[Value Objects]
-      C3[Domain Exceptions]
+    subgraph INSURANCE_SERVICE["🛡️ Insurance Service"]
+        direction TB
+        subgraph I_API["API Layer"]
+            IAPI[Controllers]
+            ISWAG[Swagger/Health]
+            IMID[Middleware]
+        end
+        
+        subgraph I_APP["Application Layer"]
+            IMED[MediatR Handlers]
+            IPORTS[Insurance Ports]
+            VPORT[Vehicle Lookup Port]
+            IPIPE[Pipeline Behaviors]
+        end
+        
+        subgraph I_DOMAIN["Domain Layer"]
+            IENT[Policy Entity]
+            IPER[PersonalNumber VO]
+            IDOM[Domain Rules]
+        end
+        
+        subgraph I_INFRA["Infrastructure Layer"]
+            IEF[EF Core]
+            IMEM[In-Memory Store]
+            subgraph DECORATORS["Decorator Chain"]
+                IFEAT[Feature Gate]
+                ICOAL[Coalescing]
+                IHTTP[HTTP Adapter]
+            end
+        end
     end
 
-    subgraph Infrastructure[Infrastructure]
-      D1[HTTP Adapters]
-      D2[EF Core (Postgres)]
-      D3[In-Memory Adapters]
-      D4[Decorators - Feature Flags, Coalescing]
+    subgraph "Database"
+        POSTGRES[(PostgreSQL)]
     end
+
+    %% Client connections
+    CLI --> VAPI
+    CLI --> IAPI
+    CURL --> VAPI
+    CURL --> IAPI
+    WEB --> IAPI
+
+    %% Vehicle Service internal flow
+    VAPI --> VMED
+    VMED --> VPORTS
+    VPORTS --> VEF
+    VPORTS --> VMEM
+    VPIPE --> VMED
+
+    %% Insurance Service internal flow
+    IAPI --> IMED
+    IMED --> IPORTS
+    IMED --> VPORT
+    IPORTS --> IEF
+    IPORTS --> IMEM
+    IPIPE --> IMED
+
+    %% Service-to-Service Communication
+    VPORT --> IFEAT
+    IFEAT --> ICOAL
+    ICOAL --> IHTTP
+    IHTTP -.->|HTTP Call| VAPI
+
+    %% Database connections
+    VEF --> POSTGRES
+    IEF --> POSTGRES
+
+    %% Styling
+    classDef apiLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef applicationLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef domainLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef infraLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef client fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef service fill:#f8f9fa,stroke:#495057,stroke-width:3px
+
+    class VAPI,VSWAG,VMID,IAPI,ISWAG,IMID apiLayer
+    class VMED,VPORTS,VPIPE,IMED,IPORTS,VPORT,IPIPE applicationLayer
+    class VENT,VREG,VDOM,IENT,IPER,IDOM domainLayer
+    class VEF,VMEM,IEF,IMEM,IHTTP,IFEAT,ICOAL infraLayer
+    class POSTGRES external
+    class CLI,CURL,WEB client
+    class VEHICLE_SERVICE,INSURANCE_SERVICE service
 ```
 
 ### Why Clean Architecture?
