@@ -134,14 +134,14 @@ graph LR
     VEF --> POSTGRES
     IEF --> POSTGRES
 
-    %% Styling
-    classDef apiLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef applicationLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef domainLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef infraLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef external fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef client fill:#f1f8e9,stroke:#33691e,stroke-width:2px
-    classDef service fill:#f8f9fa,stroke:#495057,stroke-width:3px
+    %% Styling for GitHub compatibility (dark text on light backgrounds)
+    classDef apiLayer fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#000000
+    classDef applicationLayer fill:#d1c4e9,stroke:#512da8,stroke-width:2px,color:#000000
+    classDef domainLayer fill:#c8e6c8,stroke:#388e3c,stroke-width:2px,color:#000000
+    classDef infraLayer fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000000
+    classDef external fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px,color:#000000
+    classDef client fill:#dcedc8,stroke:#689f38,stroke-width:2px,color:#000000
+    classDef service fill:#e0e0e0,stroke:#424242,stroke-width:3px,color:#000000
 
     class VAPI,VSWAG,VMID,IAPI,ISWAG,IMID apiLayer
     class VMED,VPORTS,VPIPE,IMED,IPORTS,VPORT,IPIPE applicationLayer
